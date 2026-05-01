@@ -1,3 +1,6 @@
+# ============ Taps ============
+tap "homebrew/bundle"
+
 tap "antoniorodr/memo"
 tap "homebrew/cask-versions"
 tap "homebrew/services"
@@ -69,13 +72,16 @@ brew "yt-dlp"
 brew "zoxide"
 brew "mobile-dev-inc/tap/maestro"
 brew "supabase/tap/supabase"
-cask "flipper"
+
+# ============ Apps ============
 cask "ghostty"
-cask "react-native-debugger"
+cask "zed"
+cask "fork"
+cask "spotify"
 cask "temurin"
-cask "xcodes-app"
-cask "youtube-downloader"
 cask "zulu@17"
+
+
 vscode "aaron-bond.better-comments"
 vscode "biomejs.biome"
 vscode "bradlc.vscode-tailwindcss"
