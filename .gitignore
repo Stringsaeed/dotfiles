@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+
+# Secrets — never commit
+.secrets
+*.key
+*.pem
+.env
+.env.local
+
+# Local-only overrides
+*.local
