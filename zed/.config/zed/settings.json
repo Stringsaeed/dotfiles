@@ -1,0 +1,116 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "buffer_font_family": "Geist Mono",
+  "buffer_line_height": "comfortable",
+  "agent_servers": {
+    "github-copilot-cli": {
+      "type": "registry",
+    },
+    "codex-acp": {
+      "type": "registry",
+    },
+    "claude-acp": {
+      "type": "registry",
+    },
+  },
+  "git_panel": {
+    "tree_view": true,
+  },
+  "icon_theme": "Catppuccin Mocha",
+  "edit_predictions": {
+    "provider": "copilot",
+  },
+  "agent": {
+    "tool_permissions": {
+      "default": "allow",
+    },
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5-codex",
+    },
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "terminal": {
+    "env": {
+      "Q_NEW_SESSION": "\"1\"",
+      "FIG_NEW_SESSION": "\"1\"",
+      "CW_NEW_SESSION": "\"1\"",
+    },
+    "font_family": "MesloLGS NF",
+  },
+  "colorize_brackets": true,
+  "linked_edits": true,
+  "show_whitespaces": "all",
+  "show_edit_predictions": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 14.0,
+  "theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Macchiato",
+  },
+  "base_keymap": "VSCode",
+  "ui_font_family": "Geist Mono",
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "classAttributes": [
+          "class",
+          "className",
+          "headerClassName",
+          "contentContainerClassName",
+          "columnWrapperClassName",
+          "endFillColorClassName",
+          "imageClassName",
+          "tintColorClassName",
+          "ios_backgroundColorClassName",
+          "thumbColorClassName",
+          "trackColorOnClassName",
+          "trackColorOffClassName",
+          "selectionColorClassName",
+          "cursorColorClassName",
+          "underlineColorAndroidClassName",
+          "placeholderTextColorClassName",
+          "selectionHandleColorClassName",
+          "colorsClassName",
+          "progressBackgroundColorClassName",
+          "titleColorClassName",
+          "underlayColorClassName",
+          "colorClassName",
+          "drawerBackgroundColorClassName",
+          "statusBarBackgroundColorClassName",
+          "backdropColorClassName",
+          "backgroundColorClassName",
+          "ListFooterComponentClassName",
+          "ListHeaderComponentClassName",
+        ],
+        "classFunctions": ["useResolveClassNames"],
+      },
+    },
+  },
+  "languages": {
+    "TypeScript": {
+      "colorize_brackets": true,
+      "linked_edits": true,
+      "show_edit_predictions": true,
+      "language_servers": ["tsgo", "vtsls"],
+    },
+    "TSX": {
+      "colorize_brackets": true,
+      "linked_edits": true,
+      "show_edit_predictions": true,
+      "language_servers": ["tsgo", "vtsls"],
+    },
+  },
+}

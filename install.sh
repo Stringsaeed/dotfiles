@@ -37,17 +37,21 @@ for f in .zshrc .zprofile .gitconfig; do
     mv "$HOME/$f" "$HOME/$f.backup.$TIMESTAMP"
   fi
 done
-for d in ghostty starship; do
+for d in ghostty starship zed atuin nvim; do
   target="$HOME/.config/$d"
   if [ -d "$target" ] && [ ! -L "$target" ]; then
     mv "$target" "$target.backup.$TIMESTAMP"
   fi
 done
+if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
+  mv "$HOME/.ssh/config" "$HOME/.ssh/config.backup.$TIMESTAMP"
+fi
 
 # 6. Stow all packages
 echo "Linking dotfiles..."
-mkdir -p "$HOME/.config"
-for pkg in zsh ghostty starship git; do
+mkdir -p "$HOME/.config" "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+for pkg in zsh ghostty starship git zed atuin ssh nvim; do
   stow -R "$pkg"
 done
 
