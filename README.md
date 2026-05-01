@@ -4,15 +4,22 @@ My macOS development environment.
 
 ## What's included
 
-- **Zsh** with Zinit, Starship, plugins (autosuggestions, syntax highlighting, fzf-tab)
-- **Ghostty** terminal config with Catppuccin Mocha theme
-- **Starship** prompt
-- **Git** config with delta diffs
+- **Zsh** — Zinit, Starship, plugins (autosuggestions, syntax highlighting, fzf-tab)
+- **Ghostty** — terminal config with Catppuccin Mocha theme
+- **Starship** — prompt
+- **Git** — config with delta diffs
+- **Zed** — editor settings + keymap
+- **Neovim** — LazyVim setup
+- **Atuin** — shell history config (history db stays local)
+- **SSH** — `~/.ssh/config` only (keys never tracked)
+- **Brewfile** — CLI tools, casks, and VS Code extensions
+
+Runtimes (node, python, ruby) are managed via [mise](https://mise.jdx.dev/), not brew.
 
 ## Setup on a new Mac
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+git clone https://github.com/Stringsaeed/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
