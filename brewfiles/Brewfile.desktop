@@ -1,0 +1,6 @@
+tap "anomalyco/tap"
+
+cask "anomalyco/tap/hex"
+cask "espanso"
+cask "fork"
+cask "spotify"

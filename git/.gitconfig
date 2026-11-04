@@ -3,20 +3,8 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-[user]
-	name = Muhammed Ibrahim
-	email = stringsaeed@gmail.com
-	signingkey = 6041595344B85A80
 [http]
 	sslVerify = true
-[gitbutler]
-	signCommits = true
-[init]
-	defaultBranch = main
-[commit]
-	gpgsign = true
-[tag]
-	gpgSign = true
 [core]
     pager = delta
 [interactive]
@@ -29,7 +17,7 @@
     conflictstyle = diff3
 [diff]
     colorMoved = default
-[pull]
-    rebase = false
 [init]
     defaultBranch = main
+[include]
+    path = ~/.gitconfig.local

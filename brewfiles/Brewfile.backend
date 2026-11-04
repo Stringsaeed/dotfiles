@@ -1,0 +1,7 @@
+tap "supabase/tap"
+
+brew "colima"
+brew "docker"
+brew "docker-compose"
+brew "lazydocker"
+brew "supabase/tap/supabase"

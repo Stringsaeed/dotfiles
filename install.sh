@@ -1,68 +1,68 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-DOTFILES_DIR="$HOME/dotfiles"
-cd "$DOTFILES_DIR"
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+packages=(zsh ghostty starship git zed atuin ssh)
+mode="${1:-}"
 
-# 1. Xcode Command Line Tools
-if ! xcode-select -p &> /dev/null; then
-  echo "Installing Xcode Command Line Tools..."
-  xcode-select --install
-  echo "Press Enter once the installer finishes..."
-  read -r
+case "$mode" in
+  ""|--link-only|--dry-run) ;;
+  *)
+    printf 'Usage: %s [--link-only | --dry-run]\n' "$0" >&2
+    exit 2
+    ;;
+esac
+
+link_configs() {
+  stow --dir="$DOTFILES_DIR" --target="$HOME" "$@" --stow "${packages[@]}"
+}
+
+if [[ "$mode" == --dry-run ]]; then
+  link_configs --simulate --verbose
+  exit
 fi
 
-# 2. Install Homebrew if missing
-if ! command -v brew &> /dev/null; then
-  echo "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+# Check existing files before installing dependencies when Stow is available.
+if command -v stow >/dev/null 2>&1; then
+  link_configs --simulate
 fi
 
-# 3. Install everything from Brewfile
-echo "Installing brew packages..."
-brew bundle --file="$DOTFILES_DIR/Brewfile"
-
-# 4. Install Zinit
-if [ ! -d "$HOME/.local/share/zinit/zinit.git" ]; then
-  echo "Installing Zinit..."
-  bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)" -- --no-edit
-fi
-
-# 5. Backup any existing dotfiles/configs that aren't symlinks
-echo "Backing up existing dotfiles..."
-TIMESTAMP=$(date +%s)
-for f in .zshrc .zprofile .gitconfig; do
-  if [ -f "$HOME/$f" ] && [ ! -L "$HOME/$f" ]; then
-    mv "$HOME/$f" "$HOME/$f.backup.$TIMESTAMP"
+if [[ "$mode" != --link-only ]]; then
+  if ! xcode-select -p >/dev/null 2>&1; then
+    xcode-select --install
+    printf 'Rerun this script after the Xcode Command Line Tools finish installing.\n'
+    exit
   fi
-done
-for d in ghostty starship zed atuin nvim; do
-  target="$HOME/.config/$d"
-  if [ -d "$target" ] && [ ! -L "$target" ]; then
-    mv "$target" "$target.backup.$TIMESTAMP"
+
+  if ! command -v brew >/dev/null 2>&1; then
+    if [[ ! -x /opt/homebrew/bin/brew && ! -x /usr/local/bin/brew ]]; then
+      brew_installer="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      /bin/bash -c "$brew_installer"
+    fi
+    if [[ -x /opt/homebrew/bin/brew ]]; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    else
+      eval "$(/usr/local/bin/brew shellenv)"
+    fi
   fi
-done
-if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
-  mv "$HOME/.ssh/config" "$HOME/.ssh/config.backup.$TIMESTAMP"
+
+  HOMEBREW_BUNDLE_NO_UPGRADE=1 brew bundle --file="$DOTFILES_DIR/Brewfile"
+  "$DOTFILES_DIR/setup-fonts.sh"
+
+  zinit_dir="$HOME/.local/share/zinit/zinit.git"
+  if [[ ! -f "$zinit_dir/zinit.zsh" ]]; then
+    mkdir -p "$(dirname "$zinit_dir")"
+    git clone https://github.com/zdharma-continuum/zinit "$zinit_dir"
+  fi
 fi
 
-# 6. Stow all packages
-echo "Linking dotfiles..."
-mkdir -p "$HOME/.config" "$HOME/.ssh"
-chmod 700 "$HOME/.ssh"
-for pkg in zsh ghostty starship git zed atuin ssh nvim; do
-  stow -R "$pkg"
-done
+link_configs --simulate
 
-# 7. Set up secrets file if missing
-if [ ! -f "$HOME/.secrets" ]; then
-  echo "Creating ~/.secrets template..."
-  cat > "$HOME/.secrets" << 'SECRETS'
-# Add your API keys here
-# export OPENAI_API_KEY=""
-SECRETS
-  chmod 600 "$HOME/.secrets"
+# Keep directories owned by the apps so generated files stay outside the repo.
+mkdir -p "$HOME/.config/"{atuin,ghostty,git,zed}
+if [[ ! -d "$HOME/.ssh" ]]; then
+  mkdir -m 700 "$HOME/.ssh"
 fi
 
-echo "✅ Done! Restart your terminal."
+link_configs
+printf 'Linked dotfiles. Open a new shell to load them.\n'

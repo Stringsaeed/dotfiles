@@ -16,6 +16,10 @@
     "context": "Editor",
     "bindings": {
       // "j k": ["workspace::SendKeystrokes", "escape"]
+      "alt-shift-f": "editor::Format"
+    },
+    "unbind": {
+      "cmd-shift-i": "editor::Format"
     }
   }
 ]

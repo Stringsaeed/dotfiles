@@ -7,61 +7,53 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "buffer_font_family": "Geist Mono",
+  "prettier": {
+    "allowed": true
+  },
+  "cli_default_open_behavior": "new_window",
+  "ui_font_weight": 400.0,
+  "tabs": {
+    "git_status": true,
+    "file_icons": true
+  },
+  "buffer_font_family": "Paper Mono",
   "buffer_line_height": "comfortable",
   "agent_servers": {
     "github-copilot-cli": {
-      "type": "registry",
+      "type": "registry"
     },
     "codex-acp": {
-      "type": "registry",
+      "type": "registry"
     },
     "claude-acp": {
-      "type": "registry",
-    },
+      "type": "registry"
+    }
   },
   "git_panel": {
     "tree_view": true,
+    "show_count_badge": true,
+    "file_icons": true
   },
-  "icon_theme": "Catppuccin Mocha",
+  "icon_theme": {
+    "dark": "Colored Zed Icons Theme Dark",
+    "light": "Colored Zed Icons Theme Light"
+  },
   "edit_predictions": {
-    "provider": "copilot",
-  },
-  "agent": {
-    "tool_permissions": {
-      "default": "allow",
-    },
-    "default_model": {
-      "provider": "copilot_chat",
-      "model": "gpt-5-codex",
-    },
-    "favorite_models": [],
-    "model_parameters": [],
-  },
-  "session": {
-    "trust_all_worktrees": true,
-  },
-  "terminal": {
-    "env": {
-      "Q_NEW_SESSION": "\"1\"",
-      "FIG_NEW_SESSION": "\"1\"",
-      "CW_NEW_SESSION": "\"1\"",
-    },
-    "font_family": "MesloLGS NF",
+    "provider": "zed"
   },
   "colorize_brackets": true,
   "linked_edits": true,
   "show_whitespaces": "all",
-  "show_edit_predictions": true,
-  "ui_font_size": 16,
-  "buffer_font_size": 14.0,
+  "show_edit_predictions": false,
+  "ui_font_size": 16.0,
+  "buffer_font_size": 16.0,
   "theme": {
     "mode": "system",
     "light": "Catppuccin Latte",
-    "dark": "Catppuccin Macchiato",
+    "dark": "Catppuccin Macchiato"
   },
   "base_keymap": "VSCode",
-  "ui_font_family": "Geist Mono",
+  "ui_font_family": ".SystemUIFont",
   "lsp": {
     "tailwindcss-language-server": {
       "settings": {
@@ -93,24 +85,30 @@
           "backdropColorClassName",
           "backgroundColorClassName",
           "ListFooterComponentClassName",
-          "ListHeaderComponentClassName",
+          "ListHeaderComponentClassName"
         ],
-        "classFunctions": ["useResolveClassNames"],
-      },
-    },
+        "classFunctions": ["useResolveClassNames"]
+      }
+    }
   },
   "languages": {
     "TypeScript": {
       "colorize_brackets": true,
       "linked_edits": true,
       "show_edit_predictions": true,
-      "language_servers": ["tsgo", "vtsls"],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
     },
     "TSX": {
       "colorize_brackets": true,
       "linked_edits": true,
-      "show_edit_predictions": true,
-      "language_servers": ["tsgo", "vtsls"],
+      "show_edit_predictions": true
     },
-  },
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    }
+  }
 }

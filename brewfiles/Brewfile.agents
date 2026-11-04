@@ -1,0 +1,12 @@
+# CLI agents
+brew "opencode"
+cask "claude-code"
+cask "codex"
+
+# Desktop apps
+cask "chatgpt"
+cask "claude"
+cask "cursor"
+cask "grok-bot"
+cask "opencode-desktop"
+cask "t3-code"

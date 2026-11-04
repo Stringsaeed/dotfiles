@@ -1,0 +1,14 @@
+tap "mobile-dev-inc/tap"
+
+brew "apktool"
+brew "cocoapods"
+brew "fastlane"
+brew "ios-deploy"
+brew "ios-webkit-debug-proxy"
+brew "mobile-dev-inc/tap/maestro"
+brew "ruby@3.3"
+brew "swiftformat"
+brew "xcodegen"
+
+cask "android-studio"
+cask "zulu@17"

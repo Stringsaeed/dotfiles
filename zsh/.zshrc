@@ -1,36 +1,65 @@
-# ============ Zinit ============
-if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
-    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
-    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
-        print -P "%F{33} %F{34}Installation successful.%f%b" || \
-        print -P "%F{160} The clone has failed.%f%b"
+# ============ Node.js ==============
+export NVM_DIR="${NVM_DIR:-${XDG_CONFIG_HOME:+$XDG_CONFIG_HOME/nvm}}"
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  source "$NVM_DIR/nvm.sh"
+elif [[ -n "${HOMEBREW_PREFIX:-}" && -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
+  source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 fi
 
-source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+if (( $+functions[nvm] )); then
+  autoload -Uz add-zsh-hook
 
-# Zinit annexes
-zinit light-mode for \
-    zdharma-continuum/zinit-annex-as-monitor \
-    zdharma-continuum/zinit-annex-bin-gem-node \
-    zdharma-continuum/zinit-annex-patch-dl \
-    zdharma-continuum/zinit-annex-rust
+  load-nvmrc() {
+    local nvmrc_path
+    nvmrc_path="$(nvm_find_nvmrc)"
+
+    if [ -n "$nvmrc_path" ]; then
+      local nvmrc_node_version
+      nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+      if [ "$nvmrc_node_version" = "N/A" ]; then
+        nvm install
+      elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+        nvm use
+      fi
+    elif [ -n "$(PWD=${OLDPWD:-$PWD} nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+      echo "Reverting to nvm default version"
+      nvm use default
+    fi
+  }
+
+  add-zsh-hook chpwd load-nvmrc
+  load-nvmrc
+fi
 
 # ============ Prompt ============
-eval "$(starship init zsh)"
+if (( $+commands[starship] )); then eval "$(starship init zsh)"; fi
 
-# ============ Plugins (turbo-loaded) ============
-zinit wait lucid for \
-  atload"_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions \
-  blockf atpull'zinit creinstall -q .' \
-    zsh-users/zsh-completions \
-  atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
-    zdharma-continuum/fast-syntax-highlighting
+# ============ Zinit ============
+if [[ -r "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]]; then
+  source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
 
-zinit light Aloxaf/fzf-tab
+  # Zinit annexes
+  zinit light-mode for \
+      zdharma-continuum/zinit-annex-as-monitor \
+      zdharma-continuum/zinit-annex-bin-gem-node \
+      zdharma-continuum/zinit-annex-patch-dl \
+      zdharma-continuum/zinit-annex-rust
+
+  # ============ Plugins (turbo-loaded) ============
+  zinit wait lucid for \
+    atload"_zsh_autosuggest_start" \
+      zsh-users/zsh-autosuggestions \
+    blockf atpull'zinit creinstall -q .' \
+      zsh-users/zsh-completions \
+    atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+      zdharma-continuum/fast-syntax-highlighting
+
+  zinit light Aloxaf/fzf-tab
+fi
 
 # ============ History ============
 HISTFILE=~/.zsh_history
@@ -44,26 +73,15 @@ setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
 setopt INTERACTIVE_COMMENTS GLOB_DOTS EXTENDED_GLOB
 
 # ============ Tool integrations ============
-eval "$(zoxide init zsh)"
-eval "$(fzf --zsh)"
-eval "$(atuin init zsh)"
-
-# ============ NVM lazy-load ============
-# Loads NVM only when you run nvm/node/npm/npx — saves ~300ms
-nvm() {
-  unset -f nvm node npm npx
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  nvm "$@"
-}
-node() { unset -f nvm node npm npx; [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"; node "$@"; }
-npm()  { unset -f nvm node npm npx; [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"; npm "$@"; }
-npx()  { unset -f nvm node npm npx; [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"; npx "$@"; }
+if (( $+commands[zoxide] )); then eval "$(zoxide init zsh)"; fi
+if (( $+commands[fzf] )); then eval "$(fzf --zsh)"; fi
+if (( $+commands[atuin] )); then eval "$(atuin init zsh)"; fi
 
 # ============ Bun completions ============
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 # ============ GPG (for signed commits) ============
-export GPG_TTY=$(tty)
+if [[ -t 0 ]]; then export GPG_TTY=$(tty); fi
 
 # ============ Keybindings ============
 bindkey '^[[C' autosuggest-accept       # → accepts autosuggestion
@@ -105,3 +123,6 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons $realpath'
 zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --line-range :50 $realpath 2>/dev/null || eza -1 --color=always --icons $realpath'
 zstyle ':fzf-tab:*' switch-group ',' '.'
+
+# Per-machine integrations and environment.
+[[ ! -r "$HOME/.zshrc.local" ]] || source "$HOME/.zshrc.local"
