@@ -12,7 +12,7 @@
 [delta]
     navigate = true
     line-numbers = true
-    syntax-theme = Catppuccin-mocha
+    syntax-theme = Catppuccin Mocha
 [merge]
     conflictstyle = diff3
 [diff]
